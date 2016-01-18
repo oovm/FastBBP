@@ -8,5 +8,9 @@
 
 mod errors;
 mod order_16;
+mod order_256;
+mod helpers;
 
 pub use crate::errors::{EvaluateError, Result};
+pub use crate::order_16::bbp16;
+pub use crate::order_256::bbp256;
