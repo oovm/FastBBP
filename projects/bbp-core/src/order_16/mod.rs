@@ -1,39 +1,66 @@
+use std::fmt::{Display, Formatter, Write};
+use std::sync::mpsc;
+use std::thread;
 use crate::helpers::pow_mod;
 
-const ORDER16: u64 = 16;
-
-
-fn Σ(digit: u64, j: u64) -> f64 {
-    let mut s: f64 = 0.0;
-    let mut denom = j;
-    for k in 0..digit + 1 {
-        let r = pow_mod(ORDER16, digit - k, denom);
-        s = Δ(s + r as f64 / denom as f64);
-        denom += 8;
-    }
-    let mut num = 1.0 / ORDER16 as f64;
-    while num / denom as f64 > f64::EPSILON {
-        s += num / denom as f64;
-        num /= ORDER16 as f64;
-        denom += 8;
-    }
-    s.fract()
+#[derive(Clone, Debug, Default)]
+pub struct PiViewerBase16 {
+    start: u64,
+    buffer: Vec<u8>,
 }
 
-fn Δ(v: f64) -> f64 {
-    if v < 0.0 {
-        return 1.0 + v.fract() % 1.0;
+impl PiViewerBase16 {
+    pub fn new(start: u64, length: u64) -> Self {
+        let mut buffer = vec![0; length as usize];
+        for delta in 0..length {
+            let index = delta + start;
+            let digit = bbp16(index);
+            unsafe {
+                *buffer.get_unchecked_mut(delta as usize) = digit;
+            }
+        }
+        Self { start, buffer }
     }
-    v.fract() % 1.0
 }
 
-pub(crate) fn store_u8(value: f64) -> u8 {
-    value.round().max(u8::MIN as f64).min(u8::MAX as f64) as u8
+impl Display for PiViewerBase16 {
+    fn fmt(&self, f: &mut Formatter) -> core::fmt::Result {
+        let max_length = (self.start + self.buffer.len() as u64).to_string().len();
+
+        for (i, chunk) in self.buffer.chunks(16).enumerate() {
+            let position = self.start as usize + i * 16;
+            write!(f, "{}", position)?;
+            for _ in 0..(max_length - position.to_string().len()) {
+                write!(f, " ")?;
+            }
+            write!(f, "| ")?;
+
+            for (j, base256) in chunk.iter().enumerate() {
+                write!(f, "{:02X}", base256)?;
+                match j % 4 {
+                    3 => write!(f, "  ")?,
+                    _ => write!(f, " ")?,
+                }
+            }
+            writeln!(f)?;
+        }
+        Ok(())
+    }
 }
 
-/// Original [Bailey–Borwein–Plouffe]() formula
+
 pub fn bbp16(digit: u64) -> u8 {
-    let r = Δ(4.0 * Σ(digit, 1) - (2.0 * Σ(digit, 4)) - Σ(digit, 5) - Σ(digit, 6));
-    store_u8((ORDER16 as f64 * r).floor())
+    let mut f = [(1, 4.0), (4, -2.0), (5, -1.0), (6, -1.0)].iter().map(|&(j, k)| k * series_sum(digit, j)).sum::<f64>();
+    ((f - f.floor()) * 16.0).floor() as u8
 }
 
+fn series_sum(digit: u64, j: u64) -> f64 {
+    let fraction1: f64 = (0..digit + 1)
+        .map(|i| pow_mod(16, digit - i, 8 * i + j) as f64 / (8 * i + j) as f64)
+        .fold(0.0, |x, y| (x + y).fract());
+    let fraction2: f64 = (digit + 1..)
+        .map(|i| 16.0_f64.powi(-((i - digit) as i32)) / ((8 * i + j) as f64))
+        .take_while(|&x| x.abs() > 1e-13_f64)
+        .sum();
+    fraction1 + fraction2
+}

@@ -1,4 +1,4 @@
-use BBP::{bbp16, bbp256};
+use BBP::{bbp16, bbp256, PiViewerBase16};
 
 #[test]
 fn ready() {
@@ -21,11 +21,6 @@ fn test() {
 }
 
 #[test]
-fn test256() {
-    println!("BBP[4]: 1th decimal: {}", bbp256(1));
-    println!("BBP[4]: 10th decimal: {}", bbp256(2));
-    println!("BBP[4]: 100th decimal: {}", bbp256(3));
-    println!("BBP[4]: 1000th decimal: {}", bbp256(4));
-    println!("BBP[4]: 8196th decimal: {}", bbp256(5));
-    // 32bit Overflow
+fn print16() {
+    println!("{}", PiViewerBase16::new(0, 120));
 }
