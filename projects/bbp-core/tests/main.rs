@@ -1,4 +1,4 @@
-use BBP::{bbp16, bbp256, PiViewerBase16};
+use BBP::{bbp16, bbp256, PiViewerBase16, PiViewerBase256};
 
 #[test]
 fn ready() {
@@ -23,4 +23,10 @@ fn test() {
 #[test]
 fn print16() {
     println!("{}", PiViewerBase16::new(0, 120));
+    println!("{:x}", PiViewerBase16::new(0, 120));
+    println!("{:X}", PiViewerBase16::new(0, 120));
+
+    println!("{}", PiViewerBase256::new(0, 120));
+    println!("{:x}", PiViewerBase256::new(0, 120));
+    println!("{:X}", PiViewerBase256::new(0, 120));
 }

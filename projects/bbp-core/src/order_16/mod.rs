@@ -1,7 +1,7 @@
-use std::fmt::{Display, Formatter, Write};
-use std::sync::mpsc;
-use std::thread;
+use std::fmt::{Display, Formatter, UpperHex, Write};
 use crate::helpers::pow_mod;
+use std::fmt::LowerHex;
+mod display;
 
 #[derive(Clone, Debug, Default)]
 pub struct PiViewerBase16 {
@@ -22,32 +22,6 @@ impl PiViewerBase16 {
         Self { start, buffer }
     }
 }
-
-impl Display for PiViewerBase16 {
-    fn fmt(&self, f: &mut Formatter) -> core::fmt::Result {
-        let max_length = (self.start + self.buffer.len() as u64).to_string().len();
-
-        for (i, chunk) in self.buffer.chunks(16).enumerate() {
-            let position = self.start as usize + i * 16;
-            write!(f, "{}", position)?;
-            for _ in 0..(max_length - position.to_string().len()) {
-                write!(f, " ")?;
-            }
-            write!(f, "| ")?;
-
-            for (j, base256) in chunk.iter().enumerate() {
-                write!(f, "{:02X}", base256)?;
-                match j % 4 {
-                    3 => write!(f, "  ")?,
-                    _ => write!(f, " ")?,
-                }
-            }
-            writeln!(f)?;
-        }
-        Ok(())
-    }
-}
-
 
 pub fn bbp16(digit: u64) -> u8 {
     let mut f = [(1, 4.0), (4, -2.0), (5, -1.0), (6, -1.0)].iter().map(|&(j, k)| k * series_sum(digit, j)).sum::<f64>();

@@ -1,7 +1,8 @@
-use std::fmt::{Display, Formatter, Write};
-use std::sync::mpsc;
-use std::thread;
+use std::fmt::{Display, Formatter, UpperHex, Write};
 use crate::helpers::pow_mod;
+use std::fmt::LowerHex;
+
+mod display;
 
 #[derive(Clone, Debug, Default)]
 pub struct PiViewerBase256 {
@@ -23,49 +24,32 @@ impl PiViewerBase256 {
     }
 }
 
-impl Display for PiViewerBase256 {
-    fn fmt(&self, f: &mut Formatter) -> core::fmt::Result {
-        let max_length = (self.start + self.buffer.len() as u64).to_string().len();
 
-        for (i, chunk) in self.buffer.chunks(16).enumerate() {
-            let position = self.start as usize + i * 16;
-            write!(f, "{}", position)?;
-            for _ in 0..(max_length - position.to_string().len()) {
-                write!(f, " ")?;
-            }
-            write!(f, "| ")?;
 
-            for (j, base256) in chunk.iter().enumerate() {
-                write!(f, "{:02X}", base256)?;
-                match j % 4 {
-                    3 => write!(f, "  ")?,
-                    _ => write!(f, " ")?,
-                }
-            }
-            writeln!(f)?;
-        }
-        Ok(())
-    }
-}
+
 
 
 pub fn bbp256(digit: u64) -> u8 {
-    let mut f = [(1, 4.0), (4, -2.0), (5, -1.0), (6, -1.0)].iter().map(|&(j, k)| k * series_sum(digit, j)).sum::<f64>();
-    ((f - f.floor()) * 16.0).floor() as u8
+    let mut f = [
+        (1, 256.0),
+        (4, -128.0),
+        (5, -64.0),
+        (6, -64.0),
+        (9, 16.0),
+        (12, -8.0),
+        (13, -4.0),
+        (14, -4.0),
+    ].iter().map(|&(j, k)| k * series_sum(digit, j)).sum::<f64>();
+    ((f - f.floor()) * 256.0).floor() as u8
 }
 
 fn series_sum(digit: u64, j: u64) -> f64 {
     let fraction1: f64 = (0..digit + 1)
-        .map(|i| pow_mod(16, digit - i, 8 * i + j) as f64 / (8 * i + j) as f64)
+        .map(|i| pow_mod(16, digit - i, 16 * i + j) as f64 / (16 * i + j) as f64)
         .fold(0.0, |x, y| (x + y).fract());
     let fraction2: f64 = (digit + 1..)
-        .map(|i| 16.0_f64.powi(-((i - digit) as i32)) / ((8 * i + j) as f64))
-        .take_while(|&x| x.abs() > 1e-13_f64)
+        .map(|i| 256.0_f64.powi(-((i - digit) as i32)) / ((16 * i + j) as f64))
+        .take_while(|&x| x.abs() > 1e-16_f64)
         .sum();
     fraction1 + fraction2
-}
-
-#[test]
-fn test() {
-    println!("{}", PiViewerBase256::new(0, 120));
 }
