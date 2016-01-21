@@ -1,9 +1,9 @@
-use std::fmt::{Display, Formatter, UpperHex, Write};
 use crate::helpers::pow_mod;
-use std::fmt::LowerHex;
+use std::fmt::{Display, Formatter, LowerHex, UpperHex};
 
 mod display;
 
+///
 #[derive(Clone, Debug, Default)]
 pub struct PiViewerBase256 {
     start: u64,
@@ -11,6 +11,7 @@ pub struct PiViewerBase256 {
 }
 
 impl PiViewerBase256 {
+    /// Find the hexadecimal digits of pi starting at `start` and ending at `start + length`.
     pub fn new(start: u64, length: u64) -> Self {
         let mut buffer = vec![0; length as usize];
         for delta in 0..length {
@@ -24,22 +25,12 @@ impl PiViewerBase256 {
     }
 }
 
-
-
-
-
-
+/// The order-256 BBP formula.
 pub fn bbp256(digit: u64) -> u8 {
-    let mut f = [
-        (1, 256.0),
-        (4, -128.0),
-        (5, -64.0),
-        (6, -64.0),
-        (9, 16.0),
-        (12, -8.0),
-        (13, -4.0),
-        (14, -4.0),
-    ].iter().map(|&(j, k)| k * series_sum(digit, j)).sum::<f64>();
+    let f = [(1, 256.0), (4, -128.0), (5, -64.0), (6, -64.0), (9, 16.0), (12, -8.0), (13, -4.0), (14, -4.0)]
+        .iter()
+        .map(|&(j, k)| k * series_sum(digit, j))
+        .sum::<f64>();
     ((f - f.floor()) * 256.0).floor() as u8
 }
 

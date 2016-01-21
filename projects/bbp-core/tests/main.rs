@@ -1,23 +1,17 @@
-use BBP::{bbp16, bbp256, PiViewerBase16, PiViewerBase256};
+use BBP::{bbp16, PiViewerBase16, PiViewerBase256};
 
 #[test]
 fn ready() {
     println!("it works!")
 }
 
-
 #[test]
 fn test() {
-    println!("BBP[4]: 1th decimal: {:X}", bbp16(1));
-    println!("BBP[4]: 10th decimal: {:X}", bbp16(10));
-    println!("BBP[4]: 100th decimal: {:X}", bbp16(100));
-    println!("BBP[4]: 1000th decimal: {:X}", bbp16(1000));
-    println!("BBP[4]: 8196th decimal: {:X}", bbp16(8196));
-    // 32bit Overflow
-    println!("BBP[4]: 10000th decimal: {:X}", bbp16(10000));
-    println!("BBP[4]: 100000th decimal: {:X}", bbp16(100000));
-    println!("BBP[4]: 1000000th decimal: {:X}", bbp16(1000000));
-    // println!("BBP[4]: 10000000th decimal: {:X}", bbp16(10000000));
+    assert_eq!(bbp16(0), 0x2);
+    assert_eq!(bbp16(10), 0xA);
+    assert_eq!(bbp16(100), 0x2);
+    assert_eq!(bbp16(1000), 0x4);
+    assert_eq!(bbp16(8196), 0xA);
 }
 
 #[test]
@@ -29,4 +23,11 @@ fn print16() {
     println!("{}", PiViewerBase256::new(0, 120));
     println!("{:x}", PiViewerBase256::new(0, 120));
     println!("{:X}", PiViewerBase256::new(0, 120));
+}
+
+#[test]
+fn print32() {
+    println!("{}", PiViewerBase16::new(10000, 120));
+    println!("{:x}", PiViewerBase16::new(10000, 120));
+    println!("{:X}", PiViewerBase16::new(10000, 120));
 }

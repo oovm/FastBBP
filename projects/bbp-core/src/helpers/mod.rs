@@ -1,3 +1,4 @@
+use std::fmt::{Display, Formatter};
 use std::ops::{Div, Mul, Rem};
 
 pub fn pow_mod(n: u64, m: u64, d: u64) -> u64 {
@@ -36,23 +37,37 @@ fn pow_mod_generic<T>(n: T, m: T, d: T) -> T
     }
 }
 
-#[test]
-fn pow_mod_test() {
-    const TEST_CASES: &[(u64, u64, u64, u64)] = &[
-        (0, 0, 1, 0),
-        (0, 0, 7, 1),
-        (12, 0, 7, 1),
-        (12, 1, 7, 5),
-        (12, 2, 7, 4),
-        (12, 3, 7, 6),
-        (12, 65536, 7, 2),
-        (16777215, 16777216, 31, 16),
-        (68719476735, 68719476736, 16777215, 32760),
-        (68719476735, 68719476736, 68719476734, 1),
-        (37, 9007199254740991, 281474976710655, 126094628322028),
-        (65535, 4294967295, 281474976710655, 184618294348860),
-    ];
-    for &(n, m, d, r) in TEST_CASES {
-        assert_eq!((n, m, d, pow_mod(n, m, d)), (n, m, d, r));
+pub(crate) struct HexViewer8<'i> {
+    pub lower: bool,
+    pub start: u64,
+    pub buffer: &'i [u8],
+}
+
+impl<'i> Display for HexViewer8<'i> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let max_length = (self.start + self.buffer.len() as u64).to_string().len();
+
+        for (i, chunk) in self.buffer.chunks(16).enumerate() {
+            let position = self.start as usize + i * 16;
+            write!(f, "{}", position)?;
+            for _ in 0..(max_length - position.to_string().len()) {
+                write!(f, " ")?;
+            }
+            write!(f, "│ ")?;
+
+            for (j, base16) in chunk.iter().enumerate() {
+                if self.lower {
+                    write!(f, "{:02x}", base16)?;
+                } else {
+                    write!(f, "{:02X}", base16)?;
+                }
+                match j % 4 {
+                    3 => write!(f, "  ")?,
+                    _ => write!(f, " ")?,
+                }
+            }
+            writeln!(f)?;
+        }
+        Ok(())
     }
 }
