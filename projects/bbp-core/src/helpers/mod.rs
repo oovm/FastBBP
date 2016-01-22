@@ -1,7 +1,25 @@
-use std::{
+use alloc::string::ToString;
+use core::{
     fmt::{Display, Formatter},
     ops::{Div, Mul, Rem},
 };
+use std::ops::Add;
+
+pub(crate) trait DigitLength {
+    fn length(&self) -> usize;
+}
+
+impl DigitLength for u64 {
+    fn length(&self) -> usize {
+        self.checked_ilog10().unwrap_or(0).add(1) as usize
+    }
+}
+
+impl DigitLength for usize {
+    fn length(&self) -> usize {
+        self.checked_ilog10().unwrap_or(0).add(1) as usize
+    }
+}
 
 pub fn pow_mod(n: u64, m: u64, d: u64) -> u64 {
     // n * k^2 < 2^64 - 1
@@ -37,13 +55,13 @@ pub(crate) struct HexViewer16<'i> {
 }
 
 impl<'i> Display for HexViewer8<'i> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        let max_length = (self.start + self.buffer.len() as u64).to_string().len();
+    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
+        let max_length = (self.start + self.buffer.len() as u64).length();
 
         for (i, chunk) in self.buffer.chunks(16).enumerate() {
             let position = self.start as usize + i * 16;
             write!(f, "{}", position)?;
-            for _ in 0..(max_length - position.to_string().len()) {
+            for _ in 0..(max_length - position.length()) {
                 write!(f, " ")?;
             }
             write!(f, "│ ")?;
@@ -67,13 +85,13 @@ impl<'i> Display for HexViewer8<'i> {
 }
 
 impl<'i> Display for HexViewer16<'i> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        let max_length = (self.start + self.buffer.len() as u64).to_string().len();
+    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
+        let max_length = (self.start + self.buffer.len() as u64).length();
 
         for (i, chunk) in self.buffer.chunks(16).enumerate() {
             let position = self.start as usize + i * 16;
             write!(f, "{}", position)?;
-            for _ in 0..(max_length - position.to_string().len()) {
+            for _ in 0..(max_length - position.length()) {
                 write!(f, " ")?;
             }
             write!(f, "│ ")?;

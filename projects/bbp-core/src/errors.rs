@@ -1,5 +1,5 @@
 ///
-pub type Result<T> = std::result::Result<T, EvaluateError>;
+pub type Result<T> = core::result::Result<T, EvaluateError>;
 
 ///
 #[derive(Debug, Copy, Clone)]

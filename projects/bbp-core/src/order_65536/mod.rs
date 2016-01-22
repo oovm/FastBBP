@@ -1,5 +1,7 @@
-use crate::helpers::{pow_mod, HexViewer16};
-use std::fmt::{Display, Formatter, LowerHex, UpperHex};
+use crate::helpers::{pow_mod, DigitLength, HexViewer16};
+use alloc::{vec, vec::Vec};
+use core::fmt::{Display, Formatter, LowerHex, UpperHex};
+
 mod display;
 
 ///

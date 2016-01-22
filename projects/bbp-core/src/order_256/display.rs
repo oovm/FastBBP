@@ -1,14 +1,13 @@
 use super::*;
-use crate::helpers::HexViewer8;
 
 impl Display for PiViewer8 {
     fn fmt(&self, f: &mut Formatter) -> core::fmt::Result {
-        let max_length = (self.start + self.buffer.len() as u64).to_string().len();
+        let max_length = (self.start + self.buffer.len() as u64).length();
 
         for (i, chunk) in self.buffer.chunks(10).enumerate() {
             let position = self.start as usize + i * 10;
             write!(f, "{}", position)?;
-            for _ in 0..(max_length - position.to_string().len()) {
+            for _ in 0..(max_length - position.length()) {
                 write!(f, " ")?;
             }
             write!(f, "│ ")?;
