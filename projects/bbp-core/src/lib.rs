@@ -5,12 +5,16 @@
 #![doc(html_logo_url = "https://raw.githubusercontent.com/oovm/shape-rs/dev/projects/images/Trapezohedron.svg")]
 #![doc(html_favicon_url = "https://raw.githubusercontent.com/oovm/shape-rs/dev/projects/images/Trapezohedron.svg")]
 
-
 mod errors;
 mod order_16;
 mod order_256;
+mod order_65536;
+
 mod helpers;
 
-pub use crate::errors::{EvaluateError, Result};
-pub use crate::order_16::{bbp16, PiViewerBase16};
-pub use crate::order_256::{bbp256, PiViewerBase256};
+pub use crate::{
+    errors::{EvaluateError, Result},
+    order_16::{bbp16, PiViewerBase8},
+    order_256::{bbp256, PiViewerBase256},
+    order_65536::{bbp65536, PiViewerBase65536},
+};

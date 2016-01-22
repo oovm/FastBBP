@@ -3,16 +3,16 @@ use std::fmt::{Display, Formatter, LowerHex, UpperHex};
 mod display;
 
 /// ```
-/// # use BBP::PiViewerBase16;
-/// println!("{:x}", PiViewerBase16::new(0, 120))
+/// # use BBP::PiViewerBase8;
+/// println!("{:x}", PiViewerBase8::new(0, 120))
 /// ```
 #[derive(Clone, Debug, Default)]
-pub struct PiViewerBase16 {
+pub struct PiViewerBase8 {
     start: u64,
     buffer: Vec<u8>,
 }
 
-impl PiViewerBase16 {
+impl PiViewerBase8 {
     /// Find the hexadecimal digits of pi starting at `start` and ending at `start + length`.
     pub fn new(start: u64, length: u64) -> Self {
         let mut buffer = vec![0; length as usize];
