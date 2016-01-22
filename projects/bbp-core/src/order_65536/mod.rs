@@ -1,16 +1,15 @@
-use crate::helpers::pow_mod;
+use crate::helpers::{pow_mod, HexViewer16};
 use std::fmt::{Display, Formatter, LowerHex, UpperHex};
-
 mod display;
 
 ///
 #[derive(Clone, Debug, Default)]
-pub struct PiViewerBase65536 {
+pub struct PiViewer16 {
     start: u64,
     buffer: Vec<u16>,
 }
 
-impl PiViewerBase65536 {
+impl PiViewer16 {
     /// Find the hexadecimal digits of pi starting at `start` and ending at `start + length`.
     pub fn new(start: u64, length: u64) -> Self {
         let mut buffer = vec![0; length as usize];

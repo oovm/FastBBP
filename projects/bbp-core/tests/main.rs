@@ -1,4 +1,4 @@
-use BBP::{bbp16, PiViewerBase256, PiViewerBase8};
+use BBP::{bbp16, PiViewer16, PiViewer4, PiViewer8};
 
 #[test]
 fn ready() {
@@ -16,21 +16,21 @@ fn test() {
 
 #[test]
 fn print16() {
-    println!("{}", PiViewerBase8::new(0, 120));
-    println!("{:x}", PiViewerBase8::new(0, 120));
-    println!("{:X}", PiViewerBase8::new(0, 120));
+    println!("{}", PiViewer4::new(0, 120));
+    println!("{:x}", PiViewer4::new(0, 120));
+    println!("{:X}", PiViewer4::new(0, 120));
 }
 
 #[test]
 fn print256() {
-    println!("{}", PiViewerBase256::new(0, 120));
-    println!("{:x}", PiViewerBase256::new(0, 120));
-    println!("{:X}", PiViewerBase256::new(0, 120));
+    // println!("{}", PiViewer16::new(0, 120));
+    println!("{:x}", PiViewer16::new(0, 120));
+    println!("{:X}", PiViewer8::new(0, 120));
 }
 
 #[test]
 fn print32() {
-    println!("{}", PiViewerBase8::new(10000, 120));
-    println!("{:x}", PiViewerBase8::new(10000, 120));
-    println!("{:X}", PiViewerBase8::new(10000, 120));
+    println!("{}", PiViewer4::new(10000, 120));
+    println!("{:x}", PiViewer4::new(10000, 120));
+    println!("{:X}", PiViewer4::new(10000, 120));
 }

@@ -1,7 +1,6 @@
 use super::*;
-use crate::helpers::{HexViewer16, HexViewer8};
 
-impl Display for PiViewerBase65536 {
+impl Display for PiViewer16 {
     fn fmt(&self, f: &mut Formatter) -> core::fmt::Result {
         let max_length = (self.start + self.buffer.len() as u64).to_string().len();
 
@@ -23,13 +22,13 @@ impl Display for PiViewerBase65536 {
     }
 }
 
-impl UpperHex for PiViewerBase65536 {
+impl UpperHex for PiViewer16 {
     fn fmt(&self, f: &mut Formatter) -> core::fmt::Result {
         Display::fmt(&HexViewer16 { lower: false, start: self.start, buffer: &self.buffer }, f)
     }
 }
 
-impl LowerHex for PiViewerBase65536 {
+impl LowerHex for PiViewer16 {
     fn fmt(&self, f: &mut Formatter) -> core::fmt::Result {
         Display::fmt(&HexViewer16 { lower: true, start: self.start, buffer: &self.buffer }, f)
     }

@@ -8,13 +8,14 @@
 mod errors;
 mod order_16;
 mod order_256;
+mod order_4294967296;
 mod order_65536;
 
 mod helpers;
 
 pub use crate::{
     errors::{EvaluateError, Result},
-    order_16::{bbp16, PiViewerBase8},
-    order_256::{bbp256, PiViewerBase256},
-    order_65536::{bbp65536, PiViewerBase65536},
+    order_16::{bbp16, PiViewer4},
+    order_256::{bbp256, PiViewer8},
+    order_65536::{bbp65536, PiViewer16},
 };
