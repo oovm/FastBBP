@@ -2,7 +2,7 @@ use super::*;
 
 impl Display for PiViewer16 {
     fn fmt(&self, f: &mut Formatter) -> core::fmt::Result {
-        let max_length = (self.start + self.buffer.len() as u64).length();
+        let max_length = (self.start as usize + self.buffer.len()).length();
 
         for (i, chunk) in self.buffer.chunks(10).enumerate() {
             let position = self.start as usize + i * 10;

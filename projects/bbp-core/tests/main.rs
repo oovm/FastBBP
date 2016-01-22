@@ -30,7 +30,6 @@ fn print256() {
 
 #[test]
 fn print32() {
-    println!("{}", PiViewer4::new(10000, 120));
-    println!("{:x}", PiViewer4::new(10000, 120));
-    println!("{:X}", PiViewer4::new(10000, 120));
+    println!("{}", PiViewer4::new(0, 120));
+    println!("{}", PiViewer8::new(0, 120));
 }

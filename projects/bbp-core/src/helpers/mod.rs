@@ -1,14 +1,18 @@
-use alloc::string::ToString;
 use core::{
     fmt::{Display, Formatter},
     ops::{Div, Mul, Rem},
 };
 use std::ops::Add;
+mod display;
 
 pub(crate) trait DigitLength {
     fn length(&self) -> usize;
 }
-
+impl DigitLength for u8 {
+    fn length(&self) -> usize {
+        self.checked_ilog10().unwrap_or(0).add(1) as usize
+    }
+}
 impl DigitLength for u64 {
     fn length(&self) -> usize {
         self.checked_ilog10().unwrap_or(0).add(1) as usize
@@ -42,6 +46,11 @@ where
     }
 }
 
+pub(crate) struct DecViewer<'i, T> {
+    pub start: u64,
+    pub buffer: &'i [T],
+}
+
 pub(crate) struct HexViewer8<'i> {
     pub lower: bool,
     pub start: u64,
@@ -52,64 +61,4 @@ pub(crate) struct HexViewer16<'i> {
     pub lower: bool,
     pub start: u64,
     pub buffer: &'i [u16],
-}
-
-impl<'i> Display for HexViewer8<'i> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
-        let max_length = (self.start + self.buffer.len() as u64).length();
-
-        for (i, chunk) in self.buffer.chunks(16).enumerate() {
-            let position = self.start as usize + i * 16;
-            write!(f, "{}", position)?;
-            for _ in 0..(max_length - position.length()) {
-                write!(f, " ")?;
-            }
-            write!(f, "│ ")?;
-
-            for (j, base16) in chunk.iter().enumerate() {
-                if self.lower {
-                    write!(f, "{:02x}", base16)?;
-                }
-                else {
-                    write!(f, "{:02X}", base16)?;
-                }
-                match j % 4 {
-                    3 => write!(f, "  ")?,
-                    _ => write!(f, " ")?,
-                }
-            }
-            writeln!(f)?;
-        }
-        Ok(())
-    }
-}
-
-impl<'i> Display for HexViewer16<'i> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
-        let max_length = (self.start + self.buffer.len() as u64).length();
-
-        for (i, chunk) in self.buffer.chunks(16).enumerate() {
-            let position = self.start as usize + i * 16;
-            write!(f, "{}", position)?;
-            for _ in 0..(max_length - position.length()) {
-                write!(f, " ")?;
-            }
-            write!(f, "│ ")?;
-
-            for (j, base16) in chunk.iter().enumerate() {
-                if self.lower {
-                    write!(f, "{:04x}", base16)?;
-                }
-                else {
-                    write!(f, "{:04X}", base16)?;
-                }
-                match j % 4 {
-                    3 => write!(f, "  ")?,
-                    _ => write!(f, " ")?,
-                }
-            }
-            writeln!(f)?;
-        }
-        Ok(())
-    }
 }

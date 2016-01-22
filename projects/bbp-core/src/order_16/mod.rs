@@ -1,4 +1,4 @@
-use crate::helpers::{pow_mod, DigitLength, HexViewer8};
+use crate::helpers::{pow_mod, HexViewer8};
 use alloc::{vec, vec::Vec};
 use core::fmt::{Display, Formatter, LowerHex, UpperHex};
 mod display;

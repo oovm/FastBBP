@@ -1,24 +1,9 @@
 use super::*;
+use crate::helpers::DecViewer;
 
 impl Display for PiViewer4 {
     fn fmt(&self, f: &mut Formatter) -> core::fmt::Result {
-        let max_length = (self.start + self.buffer.len() as u64).length();
-
-        for (i, chunk) in self.buffer.chunks(10).enumerate() {
-            let position = self.start as usize + i * 10;
-            write!(f, "{}", position)?;
-            for _ in 0..(max_length - position.length()) {
-                write!(f, " ")?;
-            }
-            write!(f, "│ ")?;
-
-            for base16 in chunk.iter() {
-                write!(f, "{:>2}", base16)?;
-                write!(f, " ")?
-            }
-            writeln!(f)?;
-        }
-        Ok(())
+        Display::fmt(&DecViewer { start: self.start, buffer: &self.buffer }, f)
     }
 }
 
