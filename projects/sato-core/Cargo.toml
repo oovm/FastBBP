@@ -1,0 +1,23 @@
+[package]
+name = "chudnovsky"
+version = "0.0.0"
+authors = ["Aster <192607617@qq.com>"]
+description = "Calculate π using the extended BBP formula"
+repository = "https://github.com/oovm/FastBBP"
+documentation = "https://docs.rs/BBP"
+readme = "readme.md"
+license = "MPL-2.0"
+edition = "2021"
+exclude = ["package.json", "tests/**"]
+
+[dependencies]
+num = "0.4.1"
+
+
+[dev-dependencies]
+
+[features]
+default = []
+
+[package.metadata.docs.rs]
+all-features = true
