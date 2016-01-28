@@ -9,14 +9,15 @@ extern crate alloc;
 
 mod errors;
 mod order_1;
-mod order_256;
+mod order_2;
+mod order_3;
 mod order_4294967296;
-mod order_65536;
 
 mod helpers;
 
 pub use crate::{
     errors::{EvaluateError, Result},
-    order_256::{bbp256, PiViewer8},
-    order_65536::{bbp65536, PiViewer16},
+    order_1::{chudnovsky, RamanujanL1},
+    order_2::{ramanujan, RamanujanL2},
+    order_3::{bbp65536, RamanujanL3},
 };

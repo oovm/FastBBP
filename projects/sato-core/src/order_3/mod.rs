@@ -6,12 +6,12 @@ mod display;
 
 ///
 #[derive(Clone, Debug, Default)]
-pub struct PiViewer16 {
+pub struct RamanujanL3 {
     start: u64,
     buffer: Vec<u16>,
 }
 
-impl PiViewer16 {
+impl RamanujanL3 {
     /// Find the hexadecimal digits of pi starting at `start` and ending at `start + length`.
     pub fn new(start: u64, length: u64) -> Self {
         let mut buffer = vec![0; length as usize];

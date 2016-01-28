@@ -1,43 +1,72 @@
-use crate::helpers::{pow_mod, HexViewer8};
-use alloc::{vec, vec::Vec};
-use core::fmt::{Display, Formatter, LowerHex, UpperHex};
-use num::{bigint::ToBigInt, BigInt, Integer};
+use core::fmt::{Display, Formatter};
+use dashu::{base::SquareRoot, float::DBig, integer::IBig};
+use std::ops::{Add, Div, Mul};
 
-mod display;
+/// Ramanujan Level1
+#[derive(Copy, Clone, Debug)]
+pub struct RamanujanL1 {
+    a: u64,
+    b: u64,
+    c: u64,
+    d: u64,
+    e: u64,
+    f: u64,
+}
 
-/// ```
-/// # use BBP::PiViewer4;
-/// println!("{:x}", PiViewer4::new(0, 120))
-/// ```
-#[derive(Clone, Debug, Default)]
-pub struct Ramanujan1 {}
+impl Display for RamanujanL1 {
+    // (13591409-Sum[Product[((6 j-1) (2 j-1) (6 j-5))/(10939058860032000 j^3),{j,1,k}]*(545140134 k+13591409),{k,1,Infinity}])/(426880 Sqrt[10005])
+    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
+        write!(
+            f,
+            "({}-Sum[Product[((6 j-1) (2 j-1) (6 j-5))/({} j^3),{{j,1,k}}]}}/({} k+{}),{{k,1,Infinity}}])/({} Sqrt[{}])",
+            self.c, self.d, self.e, self.f, self.a, self.b
+        )
+    }
+}
 
-fn binary_split(a: &BigInt, b: &BigInt) -> (BigInt, BigInt, BigInt) {
-    if b == &(a + 1) {
-        let pab = -(BigInt::from(6) * a - 5) * (BigInt::from(2) * a - 1) * (BigInt::from(6) * a - 1);
-        let qab = BigInt::from(10939058860032000u64) * a.pow(3);
-        let rab = &pab * (BigInt::from(545140134) * a + 13591409);
+impl RamanujanL1 {
+    pub const J163: Self = Self { a: 426880, b: 10005, c: 13591409, d: 10939058860032000, e: 545140134, f: 13591409 };
+}
+
+fn binary_split(j: i64, i: i64) -> (IBig, IBig, IBig) {
+    if i == j + 1 {
+        let pab = IBig::from(-(6 * j - 5) * (2 * j - 1) * (6 * j - 1));
+        let qab = IBig::from(j).pow(3).mul(10939058860032000u64);
+        let rab = IBig::from(545140134 * j + 13591409).mul(&pab);
         (pab, qab, rab)
     }
     else {
-        let m = (a + b).div_floor(&(2.to_bigint().unwrap()));
-        let (pam, qam, ram) = binary_split(a, &m);
-        let (pmb, qmb, rmb) = binary_split(&m, b);
-
-        let pab = &pam * &pmb;
-        let qab = &qam * &qmb;
-        let rab = &qmb * ram + &pam * rmb;
+        let m = (j + i) / 2;
+        let (pam, qam, ram) = binary_split(j, m);
+        let (pmb, qmb, rmb) = binary_split(m, i);
+        let pab = pmb.mul(&pam);
+        let qab = qam.mul(&qmb);
+        let rab = ram.mul(qmb) + pam * rmb;
         (pab, qab, rab)
     }
 }
 
-fn chudnovsky(n: u32) -> BigInt {
-    let (p1n, q1n, r1n) = binary_split(&1.to_bigint().unwrap(), &n.to_bigint().unwrap());
-    let multiplier = BigInt::from(426880) * BigInt::from(10005).sqrt().unwrap();
-    (multiplier * q1n) / (BigInt::from(13591409) * &q1n + r1n)
+impl RamanujanL1 {
+    pub fn run(&self, iterators: usize) -> DBig {
+        DBig::default()
+    }
+}
+
+fn chudnovsky_iter(iterators: usize) -> DBig {
+    // The fastest such formula gives approximately 14 significant figures
+    const RELAXATION: usize = 15;
+    let (_, q1n, r1n) = binary_split(1, iterators as i64);
+    let d = DBig::from(13591409u64).mul(&q1n).add(r1n).with_precision(RELAXATION * iterators).value();
+    let n = DBig::from(q1n.mul(426880u64)).with_precision(RELAXATION * iterators).value();
+    let sqrt = DBig::from(10005).with_precision(RELAXATION * iterators).value().sqrt();
+    n.mul(sqrt).div(d)
+}
+
+pub fn chudnovsky(iterators: usize) -> DBig {
+    RamanujanL1::J163.run(iterators)
 }
 
 #[test]
 fn main() {
-    println!("{:?}", chudnovsky(2)); // this will print an approximation of π
+    println!("{}", chudnovsky_iter(10))
 }

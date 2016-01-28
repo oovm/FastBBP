@@ -11,6 +11,7 @@ edition = "2021"
 exclude = ["package.json", "tests/**"]
 
 [dependencies]
+dashu = "0.4.0"
 num = "0.4.1"
 
 

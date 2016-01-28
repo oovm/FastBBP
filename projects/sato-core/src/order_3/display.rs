@@ -1,6 +1,6 @@
 use super::*;
 
-impl Display for PiViewer16 {
+impl Display for RamanujanL3 {
     fn fmt(&self, f: &mut Formatter) -> core::fmt::Result {
         let max_length = (self.start as usize + self.buffer.len()).length();
 
@@ -22,13 +22,13 @@ impl Display for PiViewer16 {
     }
 }
 
-impl UpperHex for PiViewer16 {
+impl UpperHex for RamanujanL3 {
     fn fmt(&self, f: &mut Formatter) -> core::fmt::Result {
         Display::fmt(&HexViewer16 { lower: false, start: self.start, buffer: &self.buffer }, f)
     }
 }
 
-impl LowerHex for PiViewer16 {
+impl LowerHex for RamanujanL3 {
     fn fmt(&self, f: &mut Formatter) -> core::fmt::Result {
         Display::fmt(&HexViewer16 { lower: true, start: self.start, buffer: &self.buffer }, f)
     }
