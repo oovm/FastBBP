@@ -1,14 +1,9 @@
-use crate::{
-    helpers::{pow_mod, HexViewer8},
-    RamanujanL1,
-};
-use alloc::{vec, vec::Vec};
-use core::fmt::{Display, Formatter, LowerHex, UpperHex};
+use core::fmt::{Display, LowerHex, UpperHex};
 use dashu::float::DBig;
 
 mod display;
 
-///
+/// Ramanujan Level2 Series
 #[derive(Copy, Clone, Debug, Default)]
 pub struct RamanujanL2 {
     a: usize,
