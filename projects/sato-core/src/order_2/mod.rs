@@ -1,4 +1,3 @@
-use core::fmt::{Display, LowerHex, UpperHex};
 use dashu::float::DBig;
 
 mod display;
@@ -19,6 +18,9 @@ impl RamanujanL2 {
     }
 }
 
+/// Compute π using ramanujan's algorithm
+///
+/// Each iteration gives about 14 digits of effective precision
 pub fn ramanujan(iterators: usize) -> DBig {
     RamanujanL2::J58.run(iterators)
 }
