@@ -20,11 +20,5 @@ fn main() {
 
 #[test]
 fn main2() {
-    println!("{}", RamanujanL1::J7.run(1000));
-    println!("{}", RamanujanL1::J11.run(1000));
-    println!("{}", RamanujanL1::J19.run(100));
-    println!("{}", RamanujanL1::J27.run(100));
-    println!("{}", RamanujanL1::J43.run(100));
-    println!("{}", RamanujanL1::J67.run(100));
-    println!("{}", RamanujanL1::J163.run(100));
+    println!("{}", RamanujanL1::J163.run(2));
 }

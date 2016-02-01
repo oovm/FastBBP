@@ -7,6 +7,7 @@
 ### Calculate Pi with 10 iterations
 
 ```rust
+# use chudnovsky::chudnovsky;
 println!("{}", chudnovsky(10))
 ```
 

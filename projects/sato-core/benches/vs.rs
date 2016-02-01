@@ -3,19 +3,19 @@ use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criteri
 
 fn level1_j163(c: &mut Criterion) {
     let mut g = c.benchmark_group("L1-J163");
-    g.bench_with_input(BenchmarkId::new("10¹×π", "10¹"), &1, |b, i| b.iter(|| RamanujanL1::J163.run(black_box(*i))));
-    g.bench_with_input(BenchmarkId::new("10²×π", "10²"), &8, |b, i| b.iter(|| RamanujanL1::J163.run(black_box(*i))));
-    g.bench_with_input(BenchmarkId::new("10³×π", "10³"), &72, |b, i| b.iter(|| RamanujanL1::J163.run(black_box(*i))));
-    g.bench_with_input(BenchmarkId::new("10⁴×π", "10⁴"), &715, |b, i| b.iter(|| RamanujanL1::J163.run(black_box(*i))));
+    g.bench_with_input(BenchmarkId::new("π", "10¹"), &2, |b, i| b.iter(|| RamanujanL1::J163.run(*i)));
+    g.bench_with_input(BenchmarkId::new("π", "10²"), &8, |b, i| b.iter(|| RamanujanL1::J163.run(*i)));
+    g.bench_with_input(BenchmarkId::new("π", "10³"), &72, |b, i| b.iter(|| RamanujanL1::J163.run(*i)));
+    g.bench_with_input(BenchmarkId::new("π", "10⁴"), &715, |b, i| b.iter(|| RamanujanL1::J163.run(*i)));
     g.finish()
 }
 
 fn level1_j67(c: &mut Criterion) {
     let mut g = c.benchmark_group("L1-J67");
-    g.bench_with_input(BenchmarkId::new("π", "10¹"), &2, |b, i| b.iter(|| RamanujanL1::J67.run(black_box(*i))));
-    g.bench_with_input(BenchmarkId::new("π", "10²"), &14, |b, i| b.iter(|| RamanujanL1::J67.run(black_box(*i))));
-    g.bench_with_input(BenchmarkId::new("π", "10³"), &134, |b, i| b.iter(|| RamanujanL1::J67.run(black_box(*i))));
-    g.bench_with_input(BenchmarkId::new("π", "10⁴"), &1334, |b, i| b.iter(|| RamanujanL1::J67.run(black_box(*i))));
+    g.bench_with_input(BenchmarkId::new("π", "10¹"), &2, |b, i| b.iter(|| RamanujanL1::J67.run(*i)));
+    g.bench_with_input(BenchmarkId::new("π", "10²"), &14, |b, i| b.iter(|| RamanujanL1::J67.run(*i)));
+    g.bench_with_input(BenchmarkId::new("π", "10³"), &134, |b, i| b.iter(|| RamanujanL1::J67.run(*i)));
+    g.bench_with_input(BenchmarkId::new("π", "10⁴"), &1334, |b, i| b.iter(|| RamanujanL1::J67.run(*i)));
     g.finish()
 }
 

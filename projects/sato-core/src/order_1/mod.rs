@@ -57,16 +57,8 @@ impl RamanujanL1 {
             (pab, qab, rab)
         }
     }
-    pub fn run_square(&self, iterators: usize) -> DBig {
-        // The fastest such formula gives approximately 14 significant figures
-        const RELAXATION: usize = 15;
-        let (_, q1n, r1n) = self.binary_split(1, iterators as i64);
-        let d = DBig::from(self.d).mul(&q1n).add(r1n).with_precision(RELAXATION * iterators).value();
-        let n = DBig::from(q1n.mul(self.a)).with_precision(RELAXATION * iterators).value();
-        let sqrt = DBig::from(self.b).mul(&n).mul(&n).with_precision(RELAXATION * iterators).value().sqrt();
-        sqrt.div(d)
-    }
     pub fn run(&self, iterators: usize) -> DBig {
+        assert!(iterators > 1, "product sum bad case");
         // The fastest such formula gives approximately 14 significant figures
         const RELAXATION: usize = 15;
         let (_, q1n, r1n) = self.binary_split(1, iterators as i64);
