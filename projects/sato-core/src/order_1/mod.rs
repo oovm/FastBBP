@@ -24,18 +24,18 @@ impl Display for RamanujanL1 {
 
 impl RamanujanL1 {
     /// let `j = (1 + sqrt(-7)) / 2`
-    pub const J7: Self = unimplemented!(); //{5 I Sqrt[15], 1125/8, -8, -63}
+    pub const J7: Self = Self { a: 1760, b: 330, c: 0, d: 10177, e: 261702 }; //{5 I Sqrt[15], 1125/8, -8, -63}
     /// let `j = (1 + sqrt(-11)) / 2`
-    pub const J11: Self = unimplemented!(); // 32 I Sqrt[2], 4096/3, -15, -154
-    /// let `j = (1 + sqrt(-19)) / 2`
+    pub const J11: Self = Self { a: 1760, b: 330, c: 0, d: 10177, e: 261702 }; // 32 I Sqrt[2], 4096/3, -15, -154
+    /// let `j = (1 + sqrt(-19)) / 2`, about 2.72 decimal digits per iteration
     pub const J19: Self = Self { a: 32, b: 6, c: 36864, d: 25, e: 342 };
     /// let `j = (1 + sqrt(-27)) / 2`
-    pub const J27: Self = unimplemented!(); // 160Sqrt[30]/9, -512000, -31, -506
+    pub const J27: Self = Self { a: 1760, b: 330, c: 0, d: 10177, e: 261702 }; // 160Sqrt[30]/9, -512000, -31, -506
     /// let `j = (1 + sqrt(-43)) / 2`
-    pub const J43: Self = unimplemented!(); // 640Sqrt[15]/3, -36864000, -263, -5418
-    /// let `j = (1 + sqrt(-67)) / 2`
+    pub const J43: Self = Self { a: 1760, b: 330, c: 0, d: 10177, e: 261702 }; // 640Sqrt[15]/3, -36864000, -263, -5418
+    /// let `j = (1 + sqrt(-67)) / 2`, about 7.94 decimal digits per iteration
     pub const J67: Self = Self { a: 1760, b: 330, c: 6133248000, d: 10177, e: 261702 };
-    /// let `j = (1 + sqrt(-163)) / 2`
+    /// let `j = (1 + sqrt(-163)) / 2`, about 14.2 decimal digits per iteration
     pub const J163: Self = Self { a: 426880, b: 10005, c: 10939058860032000, d: 13591409, e: 545140134 };
 }
 
@@ -56,6 +56,15 @@ impl RamanujanL1 {
             let rab = ram.mul(qmb) + pam * rmb;
             (pab, qab, rab)
         }
+    }
+    pub fn run_square(&self, iterators: usize) -> DBig {
+        // The fastest such formula gives approximately 14 significant figures
+        const RELAXATION: usize = 15;
+        let (_, q1n, r1n) = self.binary_split(1, iterators as i64);
+        let d = DBig::from(self.d).mul(&q1n).add(r1n).with_precision(RELAXATION * iterators).value();
+        let n = DBig::from(q1n.mul(self.a)).with_precision(RELAXATION * iterators).value();
+        let sqrt = DBig::from(self.b).mul(&n).mul(&n).with_precision(RELAXATION * iterators).value().sqrt();
+        sqrt.div(d)
     }
     pub fn run(&self, iterators: usize) -> DBig {
         // The fastest such formula gives approximately 14 significant figures
