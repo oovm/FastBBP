@@ -19,6 +19,13 @@ fn main() {
 }
 
 #[test]
-fn main2() {
-    println!("{}", RamanujanL1::J163.run(2));
+#[ignore]
+fn pi_thousand() {
+    RamanujanL1::J163.run(71);
+}
+
+#[test]
+#[ignore]
+fn pi_million() {
+    RamanujanL1::J163.run(70821);
 }

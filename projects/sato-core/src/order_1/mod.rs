@@ -1,5 +1,9 @@
 use core::fmt::{Display, Formatter};
-use dashu::{base::SquareRoot, float::DBig, integer::IBig};
+use dashu::{
+    base::SquareRoot,
+    float::{DBig, FBig},
+    integer::IBig,
+};
 use std::ops::{Add, Div, Mul};
 
 /// Ramanujan Level1 Series
@@ -57,14 +61,30 @@ impl RamanujanL1 {
             (pab, qab, rab)
         }
     }
+    /// Compute π using Ramanujan's Level 1 algorithm for the given number of iterations
+    ///
+    /// Note that the unit is iteration, which does not mean that the last number of digits is correct.
     pub fn run(&self, iterators: usize) -> DBig {
-        assert!(iterators > 1, "product sum bad case");
+        assert!(iterators > 1, "binary split bad case");
         // The fastest such formula gives approximately 14 significant figures
         const RELAXATION: usize = 15;
         let (_, q1n, r1n) = self.binary_split(1, iterators as i64);
         let d = DBig::from(self.d).mul(&q1n).add(r1n).with_precision(RELAXATION * iterators).value();
         let n = DBig::from(q1n.mul(self.a)).with_precision(RELAXATION * iterators).value();
         let sqrt = DBig::from(self.b).with_precision(RELAXATION * iterators).value().sqrt();
+        n.mul(sqrt).div(d)
+    }
+    /// Compute π using Ramanujan's Level 1 algorithm for the given number of iterations
+    ///
+    /// Note that the unit is iteration, which does not mean that the last number of digits is correct.
+    pub fn run_binary(&self, iterators: usize) -> FBig {
+        assert!(iterators > 1, "binary split bad case");
+        // The fastest such formula gives approximately 14 significant figures
+        const RELAXATION: usize = 15;
+        let (_, q1n, r1n) = self.binary_split(1, iterators as i64);
+        let d = FBig::from(self.d).mul(&q1n).add(r1n).with_precision(RELAXATION * iterators).value();
+        let n = FBig::from(q1n.mul(self.a)).with_precision(RELAXATION * iterators).value();
+        let sqrt = FBig::from(self.b).with_precision(RELAXATION * iterators).value().sqrt();
         n.mul(sqrt).div(d)
     }
 }
