@@ -1,6 +1,8 @@
 use crate::helpers::{pow_mod, HexViewer8};
 use alloc::{vec, vec::Vec};
 use core::fmt::{Display, Formatter, LowerHex, UpperHex};
+use std::{path::PathBuf, sync::mpsc, thread};
+
 mod display;
 
 /// ```
@@ -35,11 +37,27 @@ pub fn bbp16(digit: u64) -> u8 {
 }
 
 fn series_sum(digit: u64, j: u64) -> f64 {
-    let fraction1: f64 =
+    let sum_mod: f64 =
         (0..digit + 1).map(|i| pow_mod(16, digit - i, 8 * i + j) as f64 / (8 * i + j) as f64).fold(0.0, |x, y| (x + y).fract());
-    let fraction2: f64 = (digit + 1..)
+    let residuals: f64 = (digit + 1..)
         .map(|i| 16.0_f64.powi(-((i - digit) as i32)) / ((8 * i + j) as f64))
         .take_while(|&x| x.abs() > 1e-13_f64)
         .sum();
-    fraction1 + fraction2
+    sum_mod + residuals
+}
+
+fn series_sum_para(digit: u64, j: u64) {
+    let (sender, receiver) = mpsc::channel();
+
+    for i in 0..digit + 1 {
+        let sender_clone = sender.clone();
+        thread::spawn(move || {
+            sender_clone.send(i).unwrap();
+        });
+    }
+
+    let mut sum = 0;
+    for _ in 1..=10 {
+        sum += receiver.recv().unwrap();
+    }
 }

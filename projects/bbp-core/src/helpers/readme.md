@@ -18,5 +18,12 @@ $$\lbrace 10^{n} S_{p,q}\rbrace=\bigg \lbrace \bigg \lbrace q×\sum_{k=0}^{n}\fr
 
 
 $$
-\frac{1}{π}={\frac{1}{426880{\sqrt{10005}}}}{\Bigg(}13591409-\sum _{k=1}^∞{{\Bigg (}\prod _{j=1}^{k}{\frac{(6j-1)(2j-1)(6j-5)}{10939058860032000j^{3}}}{\Bigg )}\cdot(545140134k+13591409)}{\Bigg)}
+10^{100} \bmod k +3
 $$
+
+
+$$
+\frac{(2 k+8)×10^{d-k} \bmod k^2+8k+15}{k^2+8k+15} 
++
+$$
+
